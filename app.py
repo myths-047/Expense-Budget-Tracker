@@ -118,5 +118,30 @@ def expenses():
     conn.close()
     return render_template('expenses.html',expenses=expenses)
 
+@app.route('/delete_expense/<int:id>')
+def delete_expense(id):
+    conn=get_db_connection()
+    conn.execute("DELETE FROM expenses WHERE id=?",(id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('expenses'))
+
+@app.route('/categories')
+def categories():
+    conn=get_db_connection()
+
+    categories=conn.execute(""" 
+            SELECT categories.id,categories.name,categories.spending_limit,
+                    COALESCE(SUM(expenses.amount),0) as total_spent
+            FROM categories
+            LEFT JOIN expenses ON categories.id=expenses.category_id
+            GROUP BY categories.id,categories.name,categories.spending_limit
+    """).fetchall()
+
+    conn.close()
+
+    return render_template('categories.html', categories=categories)
+
 if __name__=="__main__":
     app.run(debug=True)

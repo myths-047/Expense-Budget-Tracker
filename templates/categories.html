@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories & Budget Status</title>
+</head>
+<body>
+    <h1>Categories & Budget Status</h1>
+    
+    <div>
+        <h2>Budget Overview</h2>
+        <a href="/add_category">Add Category</a> |
+        <a href="/">Home</a>
+        <hr>
+    </div>
+    
+    {% if categories|length == 0 %}
+    <div>
+        <h3>No categories yet!</h3>
+        <p>Click "Add Category" to get started.</p>
+    </div>
+    {% else %}
+    
+    <table border="1" cellpadding="10" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Budget Limit</th>
+                <th>Total Spent</th>
+                <th>Remaining</th>
+                <th>Percentage Used</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td><strong>{{ category.name }}</strong></td>
+                <td>${{ "%.2f"|format(category.spending_limit) }}</td>
+                <td>${{ "%.2f"|format(category.total_spent) }}</td>
+                <td>${{ "%.2f"|format(category.spending_limit - category.total_spent) }}</td>
+                <td>
+                    {% set percentage = (category.total_spent / category.spending_limit * 100) if category.spending_limit > 0 else 0 %}
+                    {{ "%.1f"|format(percentage) }}%
+                </td>
+                <td>
+                    {% if percentage > 100 %}
+                        ❌ Over Budget!
+                    {% elif percentage > 80 %}
+                        ⚠️ Warning
+                    {% else %}
+                        ✅ Good
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% endif %}
+</body>
+</html>
