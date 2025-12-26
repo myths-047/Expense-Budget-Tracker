@@ -104,5 +104,19 @@ def add_expenses():
 
     return render_template('add_expense.html',categories=categories)
 
+@app.route('/expenses')
+def expenses():
+    conn=get_db_connection()
+
+    expenses=conn.execute("""
+                SELECT expenses.*,categories.name as category_name
+                FROM expenses
+                LEFT JOIN categories ON expenses.category_id=categories.id
+                ORDER BY expenses.date DESC
+        """).fetchall()
+
+    conn.close()
+    return render_template('expenses.html',expenses=expenses)
+
 if __name__=="__main__":
     app.run(debug=True)
