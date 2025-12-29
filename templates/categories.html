@@ -1,28 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories & Budget Status</title>
-</head>
-<body>
-    <h1>Categories & Budget Status</h1>
-    
-    <div>
+{% extends "base.html" %}
+
+{% block title %}Categories & Budget - Smart Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📊 Categories & Budget Status</h1>
+</div>
+
+<div class="content-box">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Budget Overview</h2>
-        <a href="/add_category">Add Category</a> |
-        <a href="/">Home</a>
-        <hr>
+        <a href="/add_category" class="btn">➕ Add Category</a>
     </div>
     
     {% if categories|length == 0 %}
-    <div>
+    <div class="empty-state">
         <h3>No categories yet!</h3>
         <p>Click "Add Category" to get started.</p>
     </div>
     {% else %}
     
-    <table border="1" cellpadding="10" cellspacing="0" width="100%">
+    <table>
         <thead>
             <tr>
                 <th>Category Name</th>
@@ -46,11 +44,11 @@
                 </td>
                 <td>
                     {% if percentage > 100 %}
-                        ❌ Over Budget!
+                        <span style="color: #f44336; font-weight: bold;">❌ Over Budget!</span>
                     {% elif percentage > 80 %}
-                        ⚠️ Warning
+                        <span style="color: #FF9800; font-weight: bold;">⚠️ Warning</span>
                     {% else %}
-                        ✅ Good
+                        <span style="color: #4CAF50; font-weight: bold;">✅ Good</span>
                     {% endif %}
                 </td>
             </tr>
@@ -59,5 +57,5 @@
     </table>
     
     {% endif %}
-</body>
-</html>
+</div>
+{% endblock %}
